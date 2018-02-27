@@ -1,11 +1,10 @@
 package org.usfirst.frc.team5963.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
-import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -15,16 +14,17 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+@SuppressWarnings("deprecation")
 public class Robot2 extends IterativeRobot {
-	CANTalon leftDrive1;
-	CANTalon leftDrive2;
-	CANTalon rightDrive1;
-	CANTalon rightDrive2;
+	Spark leftDrive1;
+	Spark leftDrive2;
+	Spark rightDrive1;
+	Spark rightDrive2;
 	CameraServer camera;
 	Joystick stick;
 	Joystick controller;
 	int autoLoopCounter;
-	Talon frontMotor;
+	Spark frontMotor;
 
 	public Robot2() {
 	}
@@ -40,11 +40,11 @@ public class Robot2 extends IterativeRobot {
 		camera.startAutomaticCapture(0);           //originally ("cam0"), changed to int
     	stick = new Joystick(0);
     	controller = new Joystick(1);
-    	rightDrive1 = new CANTalon(0);
-    	rightDrive2 = new CANTalon(1);
-    	leftDrive1 = new CANTalon(2);
-    	leftDrive2 = new CANTalon(3);
-    	frontMotor = new Talon(0);
+    	rightDrive1 = new Spark(1);
+    	rightDrive2 = new Spark(2);
+    	leftDrive1 = new Spark(3);
+    	leftDrive2 = new Spark(4);
+    	frontMotor = new Spark(0);
     }
     
     /**
@@ -56,8 +56,6 @@ public class Robot2 extends IterativeRobot {
 		rightDrive2.set(0);
 		leftDrive1.set(0);
 		leftDrive2.set(0);
-		rightDrive1.reverseOutput(true);
-		rightDrive2.reverseOutput(true);
 		frontMotor.set(0);
     }
 
