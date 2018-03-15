@@ -64,7 +64,6 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Drive for 2 seconds
 		if (m_timer.get() < 2.0) {
-
 			//differentialDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
 		} else {
 			//differentialDrive.stopMotor(); // stop robot
