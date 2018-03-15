@@ -9,7 +9,8 @@ package org.usfirst.frc.team5963.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Spark;
+import com.ctre.phoenix.motorcontrol.can.*;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -21,9 +22,10 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	private DifferentialDrive m_robotDrive
-			= new DifferentialDrive(new Spark(0), new Spark(1));
-	private Joystick m_stick = new Joystick(0);
+	private WPI_VictorSPX leftFront, leftBack, rightFront, rightBack;
+	private SpeedControllerGroup leftDrive, rightDrive;
+	private DifferentialDrive differentialDrive;
+	private Joystick joystick;
 	private Timer m_timer = new Timer();
 
 	/**
@@ -32,6 +34,18 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		leftFront = new WPI_VictorSPX(2);
+		leftBack = new WPI_VictorSPX(1);
+		rightFront = new WPI_VictorSPX(3);
+		rightBack = new WPI_VictorSPX(4);
+		
+		leftDrive = new SpeedControllerGroup(leftFront, leftBack);
+		rightDrive = new SpeedControllerGroup(rightFront, rightBack);
+		
+		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
+		
+		joystick = new Joystick(0);
+		
 	}
 
 	/**
@@ -50,9 +64,10 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Drive for 2 seconds
 		if (m_timer.get() < 2.0) {
-			m_robotDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
+
+			//differentialDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
 		} else {
-			m_robotDrive.stopMotor(); // stop robot
+			//differentialDrive.stopMotor(); // stop robot
 		}
 	}
 
@@ -68,7 +83,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
+		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
 	}
 
 	/**
