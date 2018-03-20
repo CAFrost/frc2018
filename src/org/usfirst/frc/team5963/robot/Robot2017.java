@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * directory.
  */
 @SuppressWarnings("deprecation")
-public class Robot2 extends IterativeRobot {
+public class Robot2017 extends IterativeRobot {
 	Spark leftDrive1;
 	Spark leftDrive2;
 	Spark rightDrive1;
@@ -26,7 +26,7 @@ public class Robot2 extends IterativeRobot {
 	int autoLoopCounter;
 	Spark frontMotor;
 
-	public Robot2() {
+	public Robot2017() {
 	}
 	
 	/**

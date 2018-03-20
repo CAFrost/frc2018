@@ -7,12 +7,14 @@
 
 package org.usfirst.frc.team5963.robot;
 
+import com.ctre.phoenix.motorcontrol.can.*;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import com.ctre.phoenix.motorcontrol.can.*;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,11 +24,15 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	private CameraServer camera;
+
+	private WPI_VictorSPX arm;
 	private WPI_VictorSPX leftFront, leftBack, rightFront, rightBack;
 	private SpeedControllerGroup leftDrive, rightDrive;
 	private DifferentialDrive differentialDrive;
 	private Joystick joystick;
 	private Timer m_timer = new Timer();
+	private Servo leftClaw, rightClaw, poker;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -34,6 +40,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		camera = CameraServer.getInstance();
+		camera.startAutomaticCapture(0);           //originally ("cam0"), changed to int
+		arm = new WPI_VictorSPX(5);
 		leftFront = new WPI_VictorSPX(2);
 		leftBack = new WPI_VictorSPX(1);
 		rightFront = new WPI_VictorSPX(3);
@@ -44,6 +53,14 @@ public class Robot extends IterativeRobot {
 		
 		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
 		
+		// servos
+		// 6 = PWN0
+		// 7 = PWM1
+		// 8? = PWM2
+		leftClaw = new Servo(1);
+		rightClaw = new Servo(0);
+		poker = new Servo(2);
+
 		joystick = new Joystick(0);
 		
 	}
