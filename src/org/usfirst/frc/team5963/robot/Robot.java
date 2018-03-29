@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team5963.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -59,7 +60,7 @@ public class Robot extends IterativeRobot {
 		// 8? = PWM2
 		leftClaw = new Servo(1);
 		rightClaw = new Servo(0);
-		poker = new Servo(2);
+		poker = new Servo(2); //valid range is 0.25 - 0.99
 
 		joystick = new Joystick(0);
 		
@@ -81,9 +82,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Drive for 2 seconds
 		if (m_timer.get() < 2.0) {
-			//differentialDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
+			differentialDrive.arcadeDrive(-0.65, 0.0); // drive forwards half speed
 		} else {
-			//differentialDrive.stopMotor(); // stop robot
+			differentialDrive.stopMotor(); // stop robot
 		}
 	}
 
@@ -92,14 +93,79 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		openClaw();
 	}
 
+	
+	Boolean isClosed = false;
+	Boolean isOpen = false;
 	/**
 	 * This function is called periodically during teleoperated mode.
 	 */
 	@Override
 	public void teleopPeriodic() {
 		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
+		Boolean close = joystick.getRawButton(1);
+		Boolean open = joystick.getRawButton(2);
+		Boolean push = joystick.getRawButton(7);
+		if (close && !isClosed)
+		{
+			closeClaw();
+		}
+		else if(open && !isOpen)
+		{
+			openClaw();
+		}
+		if (push)
+		{
+			poker.set(0.90);
+		}
+		else
+		{
+			poker.set(0.25);
+		}
+		int povValue = joystick.getPOV(); // -1 for no input, 0 for up, 90 for right, 180 for down, and 270 for left.
+		if (povValue == 0)
+		{
+			raiseArm();
+		}
+		else if (povValue == 180)
+		{
+			lowerArm();
+		}
+		else
+		{
+			holdArm();
+		}
+	}
+
+	private void raiseArm()
+	{
+		arm.set(0.55);
+	}
+	private void lowerArm()
+	{
+		arm.set(-0.05);
+	}
+	private void holdArm()
+	{
+		arm.set(0.25);		
+	}
+	
+	private void closeClaw()
+	{
+		leftClaw.set(0.45); // 0 = close
+		rightClaw.set(0.47); //1 = close
+		isOpen = false;
+		isClosed = true;
+	}
+
+	private void openClaw()
+	{
+		leftClaw.set(0.73); // 1 = open
+		rightClaw.set(0.23); // 0 = open
+		isOpen = true;
+		isClosed = false;
 	}
 
 	/**
